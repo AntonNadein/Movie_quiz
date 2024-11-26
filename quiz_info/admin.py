@@ -3,10 +3,23 @@ from django.contrib import admin
 from quiz_info.models import *
 
 
+class MixinAdmin(admin.ModelAdmin):
+    actions = ["is_published", "is_draft"]
+
+    @admin.action(description="Опубликовать статьи")
+    def is_published(self, request, queryset):
+        queryset.update(is_published=True)
+
+    @admin.action(description="Статьи в черновики")
+    def is_draft(self, request, queryset):
+        queryset.update(is_published=False)
+
+
 @admin.register(Films)
-class FilmsAdmin(admin.ModelAdmin):
+class FilmsAdmin(MixinAdmin, admin.ModelAdmin):
     list_display = (
         "id",
+        "is_published",
         "film_name",
         "slug",
         "year",
@@ -18,19 +31,28 @@ class FilmsAdmin(admin.ModelAdmin):
         "rating",
         "video",
         "image",
-        "description",
+        # "description",
     )
     list_filter = ("film_name", "year", "country", "director", "composer")
     search_fields = ("film_name", "actors", "director", "composer")
     ordering = ("film_name", "year")
     filter_horizontal = ("actors",)
     prepopulated_fields = {"slug": ["film_name"]}
-    fields = [("film_name", "slug"), ("country", "year"), ("director", "composer"), "actors",
-              ("rating", "budget"), ("video", "image"), "awards", "description", "is_published"]
+    fields = [
+        ("film_name", "slug"),
+        ("country", "year"),
+        ("director", "composer"),
+        "actors",
+        ("rating", "budget"),
+        ("video", "image"),
+        "awards",
+        "description",
+        "is_published",
+    ]
 
 
 @admin.register(Celebrity)
-class CelebrityAdmin(admin.ModelAdmin):
+class CelebrityAdmin(MixinAdmin, admin.ModelAdmin):
     list_display = (
         "id",
         "first_name",
@@ -46,11 +68,18 @@ class CelebrityAdmin(admin.ModelAdmin):
     )
     list_filter = ("last_name", "birthday", "awards")
     search_fields = ("last_name", "country", "awards")
-    ordering = ("last_name",)
+    ordering = ("first_name",)
     filter_horizontal = ("employment",)
     prepopulated_fields = {"slug": ["last_name", "first_name"]}
-    fields = [("first_name", "last_name", "slug"), ("birthday", "country"), "employment", "photo", "awards",
-              "is_published", "title"]
+    fields = [
+        ("first_name", "last_name", "slug"),
+        ("birthday", "country"),
+        "employment",
+        "photo",
+        "awards",
+        "is_published",
+        "title",
+    ]
 
 
 @admin.register(Awards)
@@ -113,10 +142,34 @@ class MediaFileImageAdmin(admin.ModelAdmin):
 
 
 @admin.register(MediaFileVideo)
-class MediaFileVideo(admin.ModelAdmin):
+class MediaFileVideoAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "video_name",
         "video_file",
     )
     list_filter = ("video_name",)
+
+
+@admin.register(Carousel)
+class CarouselAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "film_carousel",
+        "carousel_info",
+        "slide_number",
+        "image",
+        "slogan",
+    )
+    ordering = ("slide_number",)
+
+
+@admin.register(RoundMenu)
+class RoundMenuAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "menu_name",
+        "image",
+        "image_number",
+    )
+    ordering = ("image_number",)

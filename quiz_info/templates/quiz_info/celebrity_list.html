@@ -1,0 +1,30 @@
+{% extends 'quiz_info/base.html' %}
+{% load quiz_tags %}
+{% block title %}Список звезд{% endblock %}
+
+{% block three_columns %}
+{% show_round_menu %}
+{% endblock %}
+
+{% block content %}
+<hr class="featurette-divider">
+{% for celebrity in object_list %}
+<div class="row featurette">
+    <div class="col-md-7 order-md-2">
+        <h2 class="mt-4 fw-medium text-center lh-1">{{ celebrity.first_name }} {{ celebrity.last_name }}</h2>
+        <p class="lead mt-4">{{ celebrity.title|truncatechars:300 }}.</p>
+        <div class="d-flex flex-row-reverse mt-5">
+            <a href="{% url 'quiz_info:celebrity_detail' celebrity.slug %}" class="btn btn-outline-secondary " role="button">Подробнее</a>
+            <a href="{% url 'quiz_info:celebrity_film' celebrity.slug %}" class="btn btn-outline-secondary " role="button">Фильография</a>
+            <a href="{% url 'quiz_info:home_page' %}" class="btn btn-outline-primary" role="button">Назад</a>
+        </div>
+    </div>
+    <div class="col-md-5 order-md-1">
+        <img class="rounded mx-auto d-block img-fluid" width="250" height="250"
+             src="{{ celebrity.photo.image_easy.url }}">
+    </div>
+</div>
+<hr class="featurette-divider">
+
+{% endfor %}
+{% endblock %}

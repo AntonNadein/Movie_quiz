@@ -1,0 +1,13 @@
+<div class="row">
+    {% for category in files %}
+    <div class="col-lg-4">
+        <img class="bd-placeholder-img rounded-circle" width="250" height="250" src="{{ category.image.url }}"
+             class="img-fluid" alt="{{ category.menu_name }}">
+        <h2 class="fw-normal">{{ category.menu_name }}</h2>
+
+        <p><a class="btn btn-secondary"
+              href="{% if category.image_number == 0 %}{% url 'quiz_info:list_film' %}{% elif category.image_number == 1 %}{% url 'quiz_info:list_celebrity' %}{% else %}#{% endif %}">Перейти»</a>
+        </p>
+    </div><!-- /.col-lg-4 -->
+    {% endfor %}
+</div><!-- /.row -->

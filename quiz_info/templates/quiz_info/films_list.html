@@ -1,0 +1,32 @@
+{% extends 'quiz_info/base.html' %}
+{% load quiz_tags %}
+{% block title %}Список фильмов{% endblock %}
+
+{% block three_columns %}
+{% show_round_menu %}
+{% endblock %}
+
+{% block content %}
+<hr class="featurette-divider">
+{% for film in object_list %}
+<div class="row featurette">
+    <div class="col-md-7 order-md-2">
+        <h2 class="mt-4 fw-medium text-center lh-1">{{ film.film_name }}<span
+                class="text-body-secondary"> {{ film.year }} год.</span></h2>
+        <p class="lead mt-4">{{ film.description|truncatechars:300 }}.</p>
+        <div class="d-flex flex-row-reverse mt-5">
+            <a href="{% url 'quiz_info:film_detail' film.slug %}" class="btn btn-outline-secondary " role="button">Подробнее</a>
+            <a href="{% url 'quiz_info:film_actors' film.slug %}" class="btn btn-outline-secondary " role="button">Список актеров</a>
+            <a href="{% url 'quiz_info:home_page' %}" class="btn btn-outline-primary" role="button">Назад</a>
+        </div>
+    </div>
+    <div class="col-md-5 order-md-1">
+        <img class="rounded float-start img-fluid" width="500" height="500" src="{{ film.image.image_easy.url }}">
+    </div>
+</div>
+
+
+<hr class="featurette-divider">
+
+{% endfor %}
+{% endblock %}

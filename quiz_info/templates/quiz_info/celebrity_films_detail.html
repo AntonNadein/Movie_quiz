@@ -1,0 +1,29 @@
+{% extends 'quiz_info/base.html' %}
+{% block title %}Фильмография {{ celebrity.first_name }} {{ celebrity.last_name }}{% endblock %}
+{% block content %}
+<div class="row featurette">
+    <div class="col-md-12">
+        <h2 class="mt-3 fw-medium text-center lh-1">{{ celebrity.first_name }} {{ celebrity.last_name }}</h2>
+        <div class="row">
+            <a href="{% url 'quiz_info:list_celebrity' %}" class="btn btn-outline-secondary" role="button">К списку актеров</a>
+            <a href="{% url 'quiz_info:celebrity_detail' celebrity.slug %}" class="btn btn-outline-secondary" role="button">Подробнее о {{ celebrity.first_name }} {{ celebrity.last_name }}</a>
+        </div>
+    </div>
+</div>
+<div class="mt-3 row row-cols-1 row-cols-md-3 g-5">
+    {% for film in films %}
+    <div class="col">
+        <div class="card">
+            <img src="{{ film.image.image_easy.url }}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <a href="{% url 'quiz_info:film_detail' film.slug %}"><h5
+                        class="text-center fw-medium text lh-1 link-secondary">{{ film.film_name }}</h5></a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+<hr class="featurette-divider">
+{% endblock %}

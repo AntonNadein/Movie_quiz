@@ -1,15 +1,29 @@
 from datetime import datetime
 
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
-from django.core.validators import MinValueValidator, MaxValueValidator
+
+
+class PublishedManager(models.Manager):
+    class Status(models.IntegerChoices):
+        PUBLISHED = True, "Опубликовано"
+        DRAFT = False, "Черновик"
+
+    def get_queryset(self):
+        return super().get_queryset().filter(is_published=PublishedManager.Status.PUBLISHED)
 
 
 class Films(models.Model):
     film_name = models.CharField(max_length=255, verbose_name="Название фильма")
     description = models.TextField(verbose_name="Описание фильма")
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL фильма",
-                            help_text="Уникальное имя формируется из названия фильма")
+    slug = models.SlugField(
+        max_length=255,
+        unique=True,
+        db_index=True,
+        verbose_name="URL фильма",
+        help_text="Уникальное имя формируется из названия фильма",
+    )
     year = models.PositiveIntegerField(
         validators=[MinValueValidator(1895), MaxValueValidator(datetime.now().year)],
         verbose_name="Год выпуска",
@@ -56,15 +70,21 @@ class Films(models.Model):
     rating = models.PositiveIntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(100)], verbose_name="Рейтинг"
     )
-    is_published = models.BooleanField(default=True, verbose_name="Публикация")
-    created_at = models.DateField(auto_now_add=True, verbose_name="Дата создания")
-    updated_at = models.DateField(auto_now=True, null=True, blank=True, verbose_name="Дата изменения")
+    is_published = models.BooleanField(
+        choices=PublishedManager.Status.choices, default=PublishedManager.Status.PUBLISHED, verbose_name="Публикация"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True, verbose_name="Дата изменения")
+
+    objects = models.Manager()
+    published = PublishedManager()
 
     def __str__(self):
         return f"{self.film_name} ({self.year} год) Режиссер: {self.director}"
 
     def get_absolute_url(self):
-        return reverse("film_info", kwargs={"film_slug": self.slug})
+        return reverse("quiz_info:film_detail", kwargs={"slug": self.slug})
 
     class Meta:
         verbose_name = "фильм"
@@ -75,8 +95,13 @@ class Films(models.Model):
 class Celebrity(models.Model):
     first_name = models.CharField(max_length=255, verbose_name="Имя")
     last_name = models.CharField(max_length=255, verbose_name="Фамилия")
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL",
-                            help_text="Уникальное имя формируется из фамилии и имени")
+    slug = models.SlugField(
+        max_length=255,
+        unique=True,
+        db_index=True,
+        verbose_name="URL",
+        help_text="Уникальное имя формируется из фамилии и имени",
+    )
     photo = models.ForeignKey(
         "MediaFileImage",
         on_delete=models.SET_DEFAULT,
@@ -103,15 +128,20 @@ class Celebrity(models.Model):
         verbose_name="Награды",
     )
     title = models.TextField(null=True, blank=True, verbose_name="Статья")
-    is_published = models.BooleanField(default=True, verbose_name="Публикация")
-    created_at = models.DateField(auto_now_add=True, verbose_name="Дата создания")
-    updated_at = models.DateField(auto_now=True, null=True, blank=True, verbose_name="Дата изменения")
+    is_published = models.BooleanField(
+        choices=PublishedManager.Status.choices, default=PublishedManager.Status.PUBLISHED, verbose_name="Публикация"
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True, verbose_name="Дата изменения")
+
+    objects = models.Manager()
+    published = PublishedManager()
 
     def __str__(self):
         return f"{self.last_name} {self.first_name} ({self.birthday})"
 
     def get_absolute_url(self):
-        return reverse("celebrity_info", kwargs={"celebrity_slug": self.slug})
+        return reverse("quiz_info:celebrity_detail", kwargs={"slug": self.slug})
 
     class Meta:
         verbose_name = "известную личность"
@@ -137,8 +167,9 @@ class Awards(models.Model):
 
 
 class Contact(models.Model):
-    name_family = models.CharField(max_length=255, verbose_name="Название семьи",
-                                   help_text="Название семьи (например: Семья Ивановых)")
+    name_family = models.CharField(
+        max_length=255, verbose_name="Название семьи", help_text="Название семьи (например: Семья Ивановых)"
+    )
     he = models.OneToOneField(
         "Celebrity",
         on_delete=models.SET_NULL,
@@ -155,8 +186,8 @@ class Contact(models.Model):
         related_name="wife",
         verbose_name="Жена",
     )
-    created_at = models.DateField(auto_now_add=True, verbose_name="Дата создания")
-    updated_at = models.DateField(auto_now=True, null=True, blank=True, verbose_name="Дата изменения")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True, verbose_name="Дата изменения")
 
     def __str__(self):
         return f"Муж: {self.he} - Жена: {self.she}"
@@ -168,8 +199,8 @@ class Contact(models.Model):
 
 class Country(models.Model):
     name_country = models.CharField(max_length=255, verbose_name="Страна")
-    created_at = models.DateField(auto_now_add=True, verbose_name="Дата создания")
-    updated_at = models.DateField(auto_now=True, null=True, blank=True, verbose_name="Дата изменения")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True, verbose_name="Дата изменения")
 
     def __str__(self):
         return self.name_country
@@ -181,8 +212,8 @@ class Country(models.Model):
 
 class Employment(models.Model):
     employment = models.CharField(max_length=255, verbose_name="Род деятельности", help_text="Актер, Режиссер, и др.")
-    created_at = models.DateField(auto_now_add=True, verbose_name="Дата создания")
-    updated_at = models.DateField(auto_now=True, null=True, blank=True, verbose_name="Дата изменения")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True, verbose_name="Дата изменения")
 
     def __str__(self):
         return self.employment
@@ -236,3 +267,57 @@ class MediaFileVideo(models.Model):
     class Meta:
         verbose_name = "видеозапись"
         verbose_name_plural = "Видеозаписи"
+
+
+class Carousel(models.Model):
+    film_carousel = models.CharField(
+        max_length=255, verbose_name="Название фильма", help_text="Название фильма для вывода"
+    )
+    slogan = models.CharField(
+        max_length=255, verbose_name="Слоган фильма", help_text="Информация для вывода 255 символов"
+    )
+    carousel_info = models.OneToOneField(
+        "Films",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="film",
+        verbose_name="Меню карусели",
+        help_text="Для создания ссылки на фильм",
+    )
+    slide_number = models.PositiveIntegerField(
+        verbose_name="Номер слайда", help_text="Порядок отоброжения слайдов следите что бы номера не повторялись"
+    )
+    image = models.ImageField(
+        upload_to="images/top_menu",
+        verbose_name="Изображение",
+        help_text="Загрузите изображение 2600х800 пикселей",
+    )
+
+    def __str__(self):
+        return self.film_carousel
+
+    class Meta:
+        verbose_name = "меню карусели"
+        verbose_name_plural = "Меню карусели"
+
+
+class RoundMenu(models.Model):
+    menu_name = models.CharField(
+        max_length=255, verbose_name="Название категории", help_text="Название категории для вывода"
+    )
+    image = models.ImageField(
+        upload_to="images/round_menu",
+        verbose_name="Изображение",
+        help_text="Загрузите изображение 2600х800 пикселей",
+    )
+    image_number = models.PositiveIntegerField(
+        verbose_name="Номер картинки", help_text="Определяет положение картинки на странице"
+    )
+
+    def __str__(self):
+        return self.menu_name
+
+    class Meta:
+        verbose_name = "настройки круглого меню"
+        verbose_name_plural = "Круглое меню"

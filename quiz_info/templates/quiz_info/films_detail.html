@@ -1,0 +1,40 @@
+{% extends 'quiz_info/base.html' %}
+{% block title %}{{ object.film_name }}{% endblock %}
+{% block content %}
+<div class="row featurette">
+    <div class="col-md-7 order-md-2">
+        <h2 class="mt-3 fw-medium text-center lh-1">{{ object.film_name }}</h2>
+        <h5 class="mt-3 fw-medium text lh-1">Год производства: {{ object.year }}</h5>
+        <h5 class="mt-3 fw-medium text lh-1">Страна производства: {{ object.country }}</h5>
+        <h5 class="mt-3 fw-medium text lh-1">Режиссер: </h5><a href="{% url 'quiz_info:celebrity_detail' object.director.slug %}"><h5 class="mt-3 ms-4 fw-medium text lh-1 link-secondary">{{ object.director.first_name }} {{ object.director.last_name }}</h5></a>
+        <h5 class="mt-3 fw-medium text lh-1">Композитор: </h5><a href="{% url 'quiz_info:celebrity_detail' object.composer.slug %}"><h5 class="mt-3 ms-4 fw-medium text lh-1 link-secondary">{{ object.composer.first_name }} {{ object.composer.last_name }}</h5></a>
+        <h5 class="mt-3 fw-medium text lh-1">Бюджет: {{ object.budget }} 000 000 долларов.</h5>
+        {% if not object.awards is None %}
+        <h5 class="mt-3 fw-medium text lh-1">Награды: {{ object.awards }}</h5>
+        {% endif %}
+        <h5 class="mt-3 fw-medium text lh-1">Рейтинг: {{ object.rating }}</h5>
+        <h5 class="mt-3 fw-medium text lh-1">Актеры:</h5>
+
+        {% for act in actors %}
+        <a href="{% url 'quiz_info:celebrity_detail' act.slug %}"><h6 class="mt-3 ms-4 fw-medium text lh-1 link-secondary">{{ act.first_name }} {{ act.last_name }}</h6></a>
+        {% endfor %}
+
+        {% with object.actors.all as act %}
+        <a href="{% url 'quiz_info:film_actors' object.slug %}"><h6 class="mt-3 ms-4 fw-medium text lh-1 link-secondary">все {{ act|length }}</h6></a>
+        {% endwith %}
+
+        <p class="lead">{{ object.description}}.</p>
+        <div class="d-flex flex-row-reverse mt-5">
+            <a href="#" class="btn btn-outline-secondary " role="button">Редактировать</a>
+            <a href="{% url 'quiz_info:film_actors' object.slug %}" class="btn btn-outline-secondary " role="button">Список актеров</a>
+            <a href="{% url 'quiz_info:list_film' %}" class="btn btn-outline-primary" role="button">Назад</a>
+        </div>
+    </div>
+    <div class="col-md-5 order-md-1">
+        <img class="rounded float-start img-fluid" width="500" height="500" src="{{ object.image.image_easy.url }}">
+    </div>
+</div>
+
+
+<hr class="featurette-divider">
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'quiz_info/base.html' %}
+{% load quiz_tags %}
+
+{% block three_columns %}
+{% show_round_menu %}
+{% endblock %}
+
+
+{% block content %}
+
+<hr class="featurette-divider">
+{% for film in films %}
+<div class="row featurette">
+    <div class="col-md-7 {% if forloop.first or forloop.last %}order-md-2{% endif %}">
+        <h2 class="text-center display-2">{{ film.film_name }}</h2>
+        <p class="lead">{{ film.description }}</p>
+    </div>
+    <div class="col-md-5">
+        <img src="{{ film.image.image_easy.url }}"
+             class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500"
+             height="500" alt="{{ film.film_carousel }}">
+    </div>
+</div>
+
+<hr class="featurette-divider">
+{% endfor %}
+{% endblock %}

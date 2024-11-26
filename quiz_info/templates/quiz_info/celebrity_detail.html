@@ -1,0 +1,42 @@
+{% extends 'quiz_info/base.html' %}
+{% block title %}{{ object.film_name }}{% endblock %}
+{% block content %}
+<div class="row featurette">
+    <div class="col-md-7 order-md-2">
+        <h2 class="mt-3 fw-medium text-center lh-1">{{ object.first_name }} {{ object.last_name }}</h2>
+        <h5 class="mt-3 fw-medium text lh-1">Дата рождения: {{ object.birthday }}</h5>
+        <h5 class="mt-3 fw-medium text lh-1">Страна рождения: {{ object.country }}</h5>
+        {% if not object.awards is None %}
+        <h5 class="mt-3 fw-medium text lh-1">Награды: {{ object.awards }}</h5>
+        {% endif %}
+        <h5 class="mt-3 fw-medium text lh-1">Деятельность:</h5>
+        {% with object.employment.all as employments %}
+        {% for employment in employments %}
+        <h5 class="mt-3 ms-4 fw-medium text lh-1"> {{ employment.employment }}</h5>
+        {% endfor %}
+        {% endwith %}
+        <h5 class="mt-3 fw-medium text lh-1">Фильмы:</h5>
+
+        {% for film in films %}
+        <a href="{% url 'quiz_info:film_detail' film.slug %}"><h5 class="mt-3 ms-4 fw-medium text lh-1 link-secondary">{{ film.film_name }}</h5></a>
+        {% endfor %}
+
+        {% with object.film_actors.all as film %}
+        <a href="{% url 'quiz_info:celebrity_film' object.slug %}"><h5 class="mt-3 ms-4 fw-medium text lh-1 link-secondary">все {{ film|length }}</h5></a>
+        {% endwith %}
+
+        <p class="lead">{{ object.title }}.</p>
+        <div class="d-flex flex-row-reverse mt-5">
+            <a href="#" class="btn btn btn-outline-secondary " role="button">Редактировать</a>
+            <a href="{% url 'quiz_info:celebrity_film' object.slug %}" class="btn btn btn-outline-secondary " role="button">Список фильмов</a>
+            <a href="{% url 'quiz_info:list_celebrity' %}" class="btn btn-outline-primary" role="button">Назад</a>
+        </div>
+    </div>
+    <div class="col-md-5 order-md-1">
+        <img class="rounded float-start img-fluid" width="500" height="500" src="{{ object.photo.image_easy.url }}">
+    </div>
+</div>
+
+
+<hr class="featurette-divider">
+{% endblock %}

@@ -1,15 +1,41 @@
-    <!doctype html>
+<!doctype html>
 <html lang="ru">
 <head>
+    <script src="/static/js/color-modes.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Главная{% endblock %}</title>
+    <title>{% block title %}Главная страница{% endblock %}</title>
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/carousel.css" rel="stylesheet">
 </head>
+
 <body>
-<div class="md-5">
-    <h1>Test text</h1>
-    </div>
-<script src="/static/js/bootstrap.bundle.min.js"></script>
+{% load quiz_tags %}
+{% include 'quiz_info/includes/theme_menu.html' %}
+{% include 'quiz_info/includes/header.html' %}
+<!-- Top tags menu -->
+{% show_top_carousel_memu %}
+
+    <main>
+        <!-- Wrap the rest of the page in another container to center all the content. -->
+
+        <div class="container marketing">
+            {% block three_columns %}{% endblock %}
+            {% block content %}{% endblock %}
+            <img src="{{ filess.image.url }}" class="img-fluid" width="100%" height="100%" alt="...">
+
+
+            <!-- /END THE FEATURETTES -->
+
+        </div><!-- /.container -->
+
+
+        <!-- FOOTER -->
+        <footer class="container">
+            <p class="float-end"><a href="#">Back to top</a></p>
+            <p>© 2017–2024 Company, Inc. · <a href="#">Privacy</a> · <a href="#">Terms</a></p>
+        </footer>
+    </main>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
