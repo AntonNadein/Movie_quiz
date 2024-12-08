@@ -6,8 +6,8 @@ register = template.Library()
 
 
 @register.inclusion_tag("quiz_info/tags/carousel.html")
-def show_top_carousel_memu():
-    files = Carousel.objects.all()
+def show_top_carousel_menu():
+    files = Carousel.objects.all().select_related('carousel_info')
     return {"files": files}
 
 

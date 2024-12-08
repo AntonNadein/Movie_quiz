@@ -15,7 +15,7 @@
                 class="text-body-secondary"> {{ film.year }} год.</span></h2>
         <p class="lead mt-4">{{ film.description|truncatechars:300 }}.</p>
         <div class="d-flex flex-row-reverse mt-5">
-            <a href="{% url 'quiz_info:film_detail' film.slug %}" class="btn btn-outline-secondary " role="button">Подробнее</a>
+            <a href="{{ film.get_absolute_url }}" class="btn btn-outline-secondary " role="button">Подробнее</a>
             <a href="{% url 'quiz_info:film_actors' film.slug %}" class="btn btn-outline-secondary " role="button">Список актеров</a>
             <a href="{% url 'quiz_info:home_page' %}" class="btn btn-outline-primary" role="button">Назад</a>
         </div>

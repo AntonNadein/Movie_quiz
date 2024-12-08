@@ -15,6 +15,7 @@ class PublishedManager(models.Manager):
 
 
 class Films(models.Model):
+    """Фильмы"""
     film_name = models.CharField(max_length=255, verbose_name="Название фильма")
     description = models.TextField(verbose_name="Описание фильма")
     slug = models.SlugField(
@@ -56,7 +57,7 @@ class Films(models.Model):
     video = models.ForeignKey(
         "MediaFileVideo",
         on_delete=models.SET_DEFAULT,
-        default="Нет видеоролика",
+        default="Нет видеоролика", 
         related_name="video",
         verbose_name="Видеоролик",
     )
@@ -93,6 +94,7 @@ class Films(models.Model):
 
 
 class Celebrity(models.Model):
+    """Звезды"""
     first_name = models.CharField(max_length=255, verbose_name="Имя")
     last_name = models.CharField(max_length=255, verbose_name="Фамилия")
     slug = models.SlugField(
@@ -138,7 +140,7 @@ class Celebrity(models.Model):
     published = PublishedManager()
 
     def __str__(self):
-        return f"{self.last_name} {self.first_name} ({self.birthday})"
+        return f"{self.first_name} {self.last_name}"
 
     def get_absolute_url(self):
         return reverse("quiz_info:celebrity_detail", kwargs={"slug": self.slug})
@@ -150,6 +152,7 @@ class Celebrity(models.Model):
 
 
 class Awards(models.Model):
+    """Награды"""
     name_awards = models.CharField(max_length=255, default="Нет наград", verbose_name="Название награды")
     quantity = models.PositiveIntegerField(verbose_name="Количество наград")
     created_at = models.DateField(auto_now_add=True, verbose_name="Дата создания")
@@ -167,6 +170,7 @@ class Awards(models.Model):
 
 
 class Contact(models.Model):
+    """Семья"""
     name_family = models.CharField(
         max_length=255, verbose_name="Название семьи", help_text="Название семьи (например: Семья Ивановых)"
     )
@@ -198,6 +202,7 @@ class Contact(models.Model):
 
 
 class Country(models.Model):
+    """Страны"""
     name_country = models.CharField(max_length=255, verbose_name="Страна")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True, verbose_name="Дата изменения")
@@ -211,6 +216,7 @@ class Country(models.Model):
 
 
 class Employment(models.Model):
+    """Вид деятельности"""
     employment = models.CharField(max_length=255, verbose_name="Род деятельности", help_text="Актер, Режиссер, и др.")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True, verbose_name="Дата изменения")
@@ -224,9 +230,17 @@ class Employment(models.Model):
 
 
 class MediaFileImage(models.Model):
+    """Изображения"""
+    FILM = "film"
+    CELEBRITY = "celebrity"
+
+    STATUS = [(FILM, "Фильм"), (CELEBRITY, "Звезда")]
+
     image_name = models.CharField(
         max_length=255, verbose_name="Название изображения", help_text="Название изображения для вывода"
     )
+    relation = models.CharField(
+        max_length=255, choices=STATUS, verbose_name="Категория")
     image_easy = models.ImageField(
         upload_to="images/easy",
         verbose_name="Главное фото/ Постер",
@@ -256,6 +270,7 @@ class MediaFileImage(models.Model):
 
 
 class MediaFileVideo(models.Model):
+    """Видео"""
     video_name = models.CharField(
         max_length=255, blank=False, verbose_name="Название видео", help_text="Название видео для вывода"
     )
@@ -270,6 +285,7 @@ class MediaFileVideo(models.Model):
 
 
 class Carousel(models.Model):
+    """Меню карусели"""
     film_carousel = models.CharField(
         max_length=255, verbose_name="Название фильма", help_text="Название фильма для вывода"
     )
@@ -303,6 +319,7 @@ class Carousel(models.Model):
 
 
 class RoundMenu(models.Model):
+    """Круглые меню"""
     menu_name = models.CharField(
         max_length=255, verbose_name="Название категории", help_text="Название категории для вывода"
     )

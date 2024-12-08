@@ -25,7 +25,8 @@
 
         <p class="lead">{{ object.description}}.</p>
         <div class="d-flex flex-row-reverse mt-5">
-            <a href="#" class="btn btn-outline-secondary " role="button">Редактировать</a>
+            <a href="{% url 'quiz_info:film_update' object.slug %}" class="btn btn btn-outline-secondary " role="button">Редактировать</a>
+            <a href="{% url 'quiz_info:film_delete' object.slug %}" class="btn btn btn-outline-danger " role="button">Удалить</a>
             <a href="{% url 'quiz_info:film_actors' object.slug %}" class="btn btn-outline-secondary " role="button">Список актеров</a>
             <a href="{% url 'quiz_info:list_film' %}" class="btn btn-outline-primary" role="button">Назад</a>
         </div>

@@ -1,0 +1,23 @@
+{% extends 'quiz_info/base.html' %}
+{% block title %}{% if object %}Редактор {{ object.first_name }} {{ object.last_name }}
+{% else %}Добавить звезду{% endif %}{% endblock %}
+{% block content %}
+
+<h1 class="mt-5 text-center">{% if object %}Редактировать карточку {{ object.first_name }} {{ object.last_name }}
+    {% else %}Добавить звезду{% endif %}</h1>
+<div class="col-1"></div>
+<div class="col-10">
+    <div class="col-6">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit"  class="btn btn-outline-secondary">Сохранить</button>
+            <a href="{% url 'quiz_info:home_page' %}" class="btn btn-outline-primary">Отменить</a>
+        </form>
+    </div>
+    <div class="col-6">
+        <!--вторая карточка-->
+    </div>
+</div>
+
+{% endblock %}

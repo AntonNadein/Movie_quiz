@@ -1,0 +1,19 @@
+{% extends 'quiz_info/base.html' %}
+{% block title %}Удаление фильма{% endblock %}
+{% block content %}
+
+<div class="col-12">
+    <div class="mt-5 text-center">
+        <h2 class="mt-5">Удаление фильма</h2>
+        <div class="mt-5">
+            <p>Вы действительно хотите удалить: {{ object.film_name }} {{ object.year }} года?</p>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger">Подтвердить</button>
+                <a href="{% url 'quiz_info:list_film' %}" class="btn btn-outline-primary">Отменить</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

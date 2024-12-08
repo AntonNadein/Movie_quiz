@@ -14,7 +14,7 @@
         <h2 class="mt-4 fw-medium text-center lh-1">{{ celebrity.first_name }} {{ celebrity.last_name }}</h2>
         <p class="lead mt-4">{{ celebrity.title|truncatechars:300 }}.</p>
         <div class="d-flex flex-row-reverse mt-5">
-            <a href="{% url 'quiz_info:celebrity_detail' celebrity.slug %}" class="btn btn-outline-secondary " role="button">Подробнее</a>
+            <a href="{{ celebrity.get_absolute_url }}" class="btn btn-outline-secondary " role="button">Подробнее</a>
             <a href="{% url 'quiz_info:celebrity_film' celebrity.slug %}" class="btn btn-outline-secondary " role="button">Фильография</a>
             <a href="{% url 'quiz_info:home_page' %}" class="btn btn-outline-primary" role="button">Назад</a>
         </div>

@@ -7,7 +7,6 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECRET_KEY = "django-insecure-du$m$ao_#h73cpj$*&ntrb6wv7cmp-u0k@k081nw41(-9weoo("
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -15,6 +14,7 @@ DEBUG = True if os.getenv("DEBUG") == "True" else False
 
 
 ALLOWED_HOSTS = []
+INTERNAL_IPS = ["127.0.0.1",]
 
 
 # Application definition
@@ -26,7 +26,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     "quiz_info",
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -37,6 +39,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
